@@ -107,7 +107,9 @@ public class MyActivity extends AppCompatActivity {
         return poops;
     }
     public void decrementPoops(View view){
-        poops--;
+        if(poops != 0) {
+            poops--;
+        }
         TextView textOut = (TextView) findViewById(R.id.textView);
         textOut.setText(String.valueOf(getPoops()));
     }

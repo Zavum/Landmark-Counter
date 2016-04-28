@@ -28,7 +28,7 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="I lied."
+        android:text="@string/decrement"
         android:layout_gravity="center_horizontal"
         android:onClick="decrementPoops"/>
 

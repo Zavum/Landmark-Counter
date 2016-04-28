@@ -2,5 +2,6 @@
     <string name="app_name">PoopCounter</string>
     <string name="button_send">I took a poop!</string>
     <string name="action_settings">Reset</string>
+    <string name="decrement">I Lied</string>
     <string name="title_activity_display_message">My Message</string>
 </resources>
