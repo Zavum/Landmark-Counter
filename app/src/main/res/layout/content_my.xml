@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation = "vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_my">
+    tools:showIn="@layout/activity_my"
+    android:orientation="vertical">
 
-
-
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/contentContainer"
+        android:layout_below="@+id/plusPoop"
+        layout="@layout/fragment_map"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_send"
         android:onClick="incrementPoops"
-        android:layout_weight="0.01" />
+        android:id="@id/plusPoop"/>
+
+
+    <Button
+        android:id="@+id/minusPoop"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/decrement"
+        android:onClick="decrementPoops"
+        android:layout_below="@id/plusPoop"
+        android:layout_alignParentRight="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight = "0.11"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_below="@+id/plusPoop"
+        android:layout_toStartOf="@+id/minusPoop"
+        android:layout_alignBottom="@+id/minusPoop" />
 
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/decrement"
-        android:layout_gravity="center_horizontal"
-        android:onClick="decrementPoops"/>
 
-</LinearLayout>
+</RelativeLayout>

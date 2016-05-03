@@ -3,5 +3,8 @@
     <string name="button_send">I took a poop!</string>
     <string name="action_settings">Reset</string>
     <string name="decrement">I Lied</string>
-    <string name="title_activity_display_message">My Message</string>
+    <string name="title_activity_mark_poop">Map</string>
+    <string name="widget_increment">+1</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

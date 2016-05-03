@@ -17,7 +17,8 @@ import android.widget.RemoteViews;
  */
 public class PoopWidgetProvider extends AppWidgetProvider {
     public static String WIDGET_BUTTON = "com.example.dakota.poopcounter.WIDGET_BUTTON";
-    int poops;
+    private int poops;
+    private MyMapFragment mapFragment;
     @Override
     public void onUpdate(Context context, AppWidgetManager appwidgetManager, int[] appWidgetIds){
         final int count = appWidgetIds.length;
@@ -42,7 +43,7 @@ public class PoopWidgetProvider extends AppWidgetProvider {
 
             //Get layout for the App Widget and attach an onClick Listener
             //to the button
-
+            mapFragment = new MyMapFragment();
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.widget_button, pendingIntent);
@@ -85,6 +86,7 @@ public class PoopWidgetProvider extends AppWidgetProvider {
         SharedPreferences sp = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         poops = sp.getInt("poops",0);
         poops++;
+        mapFragment.poopTaken();
 
     }
 
@@ -92,6 +94,7 @@ public class PoopWidgetProvider extends AppWidgetProvider {
         SharedPreferences sp = context.getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("poops",poops);
-        editor.commit();
+        editor.apply();
+        mapFragment.savePastLocations();
     }
 }

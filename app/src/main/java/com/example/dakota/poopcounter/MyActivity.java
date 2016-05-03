@@ -5,23 +5,26 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
-import android.widget.EditText;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import static android.app.PendingIntent.getActivity;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 
-public class MyActivity extends AppCompatActivity {
-    public final static String EXTRA_MESSAGE = "com.mycompany.poopcounter.MESSAGE";
+public class MyActivity extends AppCompatActivity{
     private int poops;
+    public static FragmentManager fragmentManager;
+    MyMapFragment mapFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,29 @@ public class MyActivity extends AppCompatActivity {
 
         retrievePoops();
 
+
         TextView textOut = (TextView) findViewById(R.id.textView);
         textOut.setText(String.valueOf(getPoops()));
+
+        if(findViewById(R.id.contentContainer) != null){
+            if(savedInstanceState != null){
+                return;
+            }
+            //creating map fragment to be placed in activity layout
+            mapFragment = new MyMapFragment();
+
+            //If the activity is started with special instructions from an Intent,
+            //pass the intent's extra's to the fragment as arguments
+            mapFragment.setArguments(getIntent().getExtras());
+
+            //add the fragment to the content_my framelayout
+            getSupportFragmentManager().beginTransaction().add(R.id.contentContainer,mapFragment).commit();
+
+
+        }else{
+            textOut.setText("Map was null");
+        }
+
 
     }
     @Override
@@ -41,6 +65,7 @@ public class MyActivity extends AppCompatActivity {
         super.onPause(); //Always call superclass method
         //Saving poop value to MyPref sharedpreference file
         savePoops();
+        mapFragment.savePastLocations();
         updateWidget();
 
 
@@ -59,6 +84,7 @@ public class MyActivity extends AppCompatActivity {
 
         //Saving poop value to MyPref sharedpreference file
         savePoops();
+        mapFragment.savePastLocations();
         updateWidget();
 
 
@@ -94,16 +120,13 @@ public class MyActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public void incrementPoops(View view){
-        //Intent intent = new Intent(this,DisplayMessageActivity.class);
+
         poops++;
         TextView textOut = (TextView) findViewById(R.id.textView);
         textOut.setText(String.valueOf(getPoops()));
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, poops);
-        //startActivity(intent);
+        mapFragment.poopTaken();
     }
-    public int getPoops(){
+    private int getPoops(){
         return poops;
     }
     public void decrementPoops(View view){
@@ -113,13 +136,13 @@ public class MyActivity extends AppCompatActivity {
         TextView textOut = (TextView) findViewById(R.id.textView);
         textOut.setText(String.valueOf(getPoops()));
     }
-    public void savePoops(){
+    private void savePoops(){
         SharedPreferences sp = getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("poops",poops);
-        editor.commit();
+        editor.apply();
     }
-    public void retrievePoops(){
+    private void retrievePoops(){
         //shared preference to retrieve stored poop value
         SharedPreferences sp = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         //use 0 if no stored value is found
@@ -136,7 +159,7 @@ public class MyActivity extends AppCompatActivity {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
         ComponentName thisWidget = new ComponentName(context, PoopWidgetProvider.class);
-        remoteViews.setTextViewText(R.id.textView, String.valueOf(getPoops()));
+        remoteViews.setTextViewText(R.id.widgetTextView, String.valueOf(getPoops()));
         appWidgetManager.updateAppWidget(thisWidget, remoteViews);
     }
 }
